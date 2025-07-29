@@ -1,11 +1,37 @@
-# URLs сайта Stellar Burgers, которые используются в тестах
-main_page_url = 'https://stellarburgers.nomoreparties.site/'
-register_page_url = 'https://stellarburgers.nomoreparties.site/register'
-login_page_url = 'https://stellarburgers.nomoreparties.site/login'
-forgot_password_page_url = 'https://stellarburgers.nomoreparties.site/forgot-password'
-profile_page_url = 'https://stellarburgers.nomoreparties.site/account/profile'
+from __future__ import annotations
+import os
 
-# Данные тестового пользователя
-test_user_name = 'Test Testov'
-test_user_login = 'test_testov777@inbox.ru'
-test_user_password = 'test_testov'
+class Urls:
+
+    BASE: str = os.getenv("SB_BASE_URL", "https://stellarburgers.nomoreparties.site")
+    MAIN_PATH: str = "/"
+    REGISTER_PATH: str = "/register"
+    LOGIN_PATH: str = "/login"
+    FORGOT_PASSWORD_PATH: str = "/forgot-password"
+    PROFILE_PATH: str = "/account/profile"
+
+    @classmethod
+    def main(cls) -> str:
+        return cls.BASE + cls.MAIN_PATH
+
+    @classmethod
+    def register(cls) -> str:
+        return cls.BASE + cls.REGISTER_PATH
+
+    @classmethod
+    def login(cls) -> str:
+        return cls.BASE + cls.LOGIN_PATH
+
+    @classmethod
+    def forgot_password(cls) -> str:
+        return cls.BASE + cls.FORGOT_PASSWORD_PATH
+
+    @classmethod
+    def profile(cls) -> str:
+        return cls.BASE + cls.PROFILE_PATH
+
+class TestUser:
+
+    name: str = "Test Testov"
+    login: str = "test_testov777@inbox.ru"
+    password: str = "test_testov"

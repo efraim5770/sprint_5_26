@@ -1,36 +1,34 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from src.locators import WebsiteLocators
-import src.data as data
+
+from src.locators import WebsiteLocators as L
+from src.data import Urls, TestUser
+
 
 class TestAccountNavigation:
 
     def test_navigate_to_account_page(self, driver):
-        driver.get(data.login_page_url)
+        driver.get(Urls.login())
         wait = WebDriverWait(driver, 10)
 
-        # Вводим email для входа в поле
-        email_input = wait.until(EC.presence_of_element_located(WebsiteLocators.EMAIL_INPUT_FORM))
-        email_input.send_keys(data.test_user_login)
+        # вводим e‑mail и пароль
+        wait.until(EC.presence_of_element_located(L.EMAIL_INPUT_FORM))\
+            .send_keys(TestUser.login)
+        wait.until(EC.presence_of_element_located(L.PASSWORD_INPUT_FORM))\
+            .send_keys(TestUser.password)
 
-        # Вводим пароль для входа в поле
-        password_input = wait.until(EC.presence_of_element_located(WebsiteLocators.PASSWORD_INPUT_FORM))
-        password_input.send_keys(data.test_user_password)
+        wait.until(EC.element_to_be_clickable(L.LOGIN_BUTTON_FORM)).click()
 
-        # Нажимаем кнопку "Войти"
-        login_button = wait.until(EC.element_to_be_clickable(WebsiteLocators.LOGIN_BUTTON_FORM))
-        login_button.click()
+        # ожидаем редирект на главную
+        wait.until(EC.url_to_be(Urls.main()))
 
-        # Ожидаем перехода на главную страницу
-        wait.until(EC.url_to_be(data.main_page_url))
+        # «Личный кабинет»
+        wait.until(EC.element_to_be_clickable(L.ACCOUNT_BUTTON)).click()
 
-        # Кликаем кнопку "Личный Кабинет"
-        account_button = wait.until(EC.element_to_be_clickable(WebsiteLocators.ACCOUNT_BUTTON))
-        account_button.click()
+        # страница профиля
+        wait.until(EC.url_to_be(Urls.profile()))
 
-        # Ожидаем перехода на страницу личного кабинета
-        wait.until(EC.url_to_be(data.profile_page_url))
-
-        # Проверяем, что кнопка "Выход" отображается на странице личного кабинета
-        logout_button = wait.until(EC.presence_of_element_located(WebsiteLocators.LOGOUT_BUTTON))
-        assert logout_button.is_displayed()
+        # кнопка «Выход» присутствует
+        assert wait.until(
+            EC.visibility_of_element_located(L.LOGOUT_BUTTON)
+        ).is_displayed()
